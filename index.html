@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <title>خريطة التلوث الصناعي – المرج و مسطرد</title>
+
+    <!-- Leaflet CSS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <header class="header">
+      <div>
+        <h1>خريطة التلوث الصناعي – المرج و مسطرد</h1>
+        <p>مرئيات توضح توزيع المصانع وتأثيرها على المناطق المحيطة</p>
+      </div>
+    </header>
+
+    <main class="layout">
+      <!-- بانل معلومات بسيطة (تقدر تطورها زي الموقع الأصلي لاحقًا) -->
+      <section class="info-panel">
+        <h2>نظرة عامة</h2>
+        <p>
+          حرّك الخريطة، واقف بالموس على نقطة مصنع لمشاهدة كل البيانات،
+          ونسبة التأثير مقارنة بباقي المصانع في نفس المدينة.
+        </p>
+
+        <div id="stats">
+          <!-- ممكن لاحقًا نحسب أرقام تلقائيًا من البيانات -->
+          <div class="stat-card">
+            <h3>عدد المصانع</h3>
+            <p id="total-factories">–</p>
+          </div>
+          <div class="stat-card">
+            <h3>إجمالي الانبعاثات</h3>
+            <p id="total-emissions">–</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- عنصر الخريطة في النص -->
+      <section class="map-wrapper">
+        <div id="map"></div>
+      </section>
+
+      <!-- سايد بار على جنب الخريطة للتحميل -->
+      <aside class="sidebar">
+        <h2>تحميل البيانات</h2>
+
+        <div class="download-group">
+          <h3>بيانات المصانع (Excel)</h3>
+          <a
+            href="data/marg_factories.xlsx"
+            download
+            class="btn-download"
+          >
+            تحميل مصانع المرج
+          </a>
+          <a
+            href="data/mostord_factories.xlsx"
+            download
+            class="btn-download"
+          >
+            تحميل مصانع مسطرد
+          </a>
+        </div>
+
+        <div class="download-group">
+          <h3>المرئيات (اختياري)</h3>
+          <!-- لو حبيت تحط تحميل للـ GeoJSON أو SHP كمان -->
+          <a
+            href="data/marg_boundary.geojson"
+            download
+            class="btn-download secondary"
+          >
+            تحميل حدود المرج (GeoJSON)
+          </a>
+          <a
+            href="data/mostord_boundary.geojson"
+            download
+            class="btn-download secondary"
+          >
+            تحميل حدود مسطرد (GeoJSON)
+          </a>
+        </div>
+
+        <div class="legend">
+          <h3>الليجند</h3>
+          <div class="legend-item">
+            <span class="legend-color city-marg"></span> حدود المرج
+          </div>
+          <div class="legend-item">
+            <span class="legend-color city-mostord"></span> حدود مسطرد
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot marg-factory"></span> مصانع المرج
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot mostord-factory"></span> مصانع مسطرد
+          </div>
+        </div>
+      </aside>
+    </main>
+
+    <!-- Leaflet JS -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+
+    <script src="script.js"></script>
+  </body>
+</html>

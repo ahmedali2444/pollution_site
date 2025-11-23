@@ -1,0 +1,218 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: #0b1120;
+  color: #e5e7eb;
+  direction: rtl;
+}
+
+.header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #1f2937;
+  background: radial-gradient(circle at top, #0f172a, #020617);
+}
+
+.header h1 {
+  margin: 0 0 4px;
+  font-size: 1.4rem;
+}
+
+.header p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(240px, 280px) minmax(0, 1fr) minmax(240px, 280px);
+  gap: 12px;
+  padding: 12px;
+  height: calc(100vh - 64px);
+}
+
+/* info panel */
+
+.info-panel {
+  background: #020617;
+  border-radius: 16px;
+  border: 1px solid #1f2937;
+  padding: 16px;
+  overflow: auto;
+}
+
+.info-panel h2 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+#stats {
+  display: grid;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.stat-card {
+  background: #020617;
+  border-radius: 12px;
+  border: 1px solid #1f2937;
+  padding: 10px 12px;
+}
+
+.stat-card h3 {
+  margin: 0 0 4px;
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+.stat-card p {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* map */
+
+.map-wrapper {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #1f2937;
+}
+
+#map {
+  width: 100%;
+  height: 100%;
+}
+
+/* sidebar */
+
+.sidebar {
+  background: #020617;
+  border-radius: 16px;
+  border: 1px solid #1f2937;
+  padding: 16px;
+  overflow: auto;
+}
+
+.sidebar h2 {
+  margin-top: 0;
+  font-size: 1.1rem;
+}
+
+.download-group {
+  margin-bottom: 16px;
+}
+
+.download-group h3 {
+  font-size: 0.95rem;
+  margin: 0 0 8px;
+}
+
+.btn-download {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 8px 10px;
+  margin-bottom: 6px;
+  border-radius: 999px;
+  border: none;
+  text-decoration: none;
+  background: #22c55e;
+  color: #022c22;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.05s ease;
+}
+
+.btn-download:hover {
+  background: #16a34a;
+  transform: translateY(-1px);
+}
+
+.btn-download.secondary {
+  background: #111827;
+  color: #e5e7eb;
+}
+
+.btn-download.secondary:hover {
+  background: #1f2937;
+}
+
+/* legend */
+
+.legend {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #1f2937;
+}
+
+.legend h3 {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+  color: #9ca3af;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+
+.legend-color,
+.legend-dot {
+  display: inline-block;
+}
+
+.legend-color {
+  width: 18px;
+  height: 10px;
+  border-radius: 4px;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.city-marg {
+  background: rgba(59, 130, 246, 0.6);
+}
+
+.city-mostord {
+  background: rgba(236, 72, 153, 0.6);
+}
+
+.marg-factory {
+  background: #3b82f6;
+}
+
+.mostord-factory {
+  background: #ec4899;
+}
+
+/* Leaflet popup RTL tweak */
+.leaflet-popup-content-wrapper {
+  direction: rtl;
+  text-align: right;
+}
+
+/* Responsive */
+
+@media (max-width: 960px) {
+  .layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 50vh auto;
+  }
+
+  .map-wrapper {
+    height: 50vh;
+  }
+}
