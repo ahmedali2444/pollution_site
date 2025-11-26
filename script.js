@@ -114,7 +114,7 @@ function addFactoriesLayer(geojson, city) {
       const rows = [];
 
       rows.push(
-        `<tr><th>نسبة التلوث داخل ${cityLabel}</th><td>${impactPercent}</td></tr>`
+        `<tr><th>area pollution</th><td>${impactPercent}</td></tr>`
       );
 
       if (ch4 !== undefined)
