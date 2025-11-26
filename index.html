@@ -24,7 +24,7 @@
     </header>
 
     <main class="layout">
-      <!-- بانل معلومات بسيطة (تقدر تطورها زي الموقع الأصلي لاحقًا) -->
+      <!-- بانل معلومات -->
       <section class="info-panel">
         <h2>نظرة عامة</h2>
         <p>
@@ -33,7 +33,6 @@
         </p>
 
         <div id="stats">
-          <!-- ممكن لاحقًا نحسب أرقام تلقائيًا من البيانات -->
           <div class="stat-card">
             <h3>عدد المصانع</h3>
             <p id="total-factories">–</p>
@@ -45,12 +44,12 @@
         </div>
       </section>
 
-      <!-- عنصر الخريطة في النص -->
+      <!-- الخريطة -->
       <section class="map-wrapper">
         <div id="map"></div>
       </section>
 
-      <!-- سايد بار على جنب الخريطة للتحميل -->
+      <!-- سايد بار -->
       <aside class="sidebar">
         <h2>تحميل البيانات</h2>
 
@@ -72,9 +71,27 @@
           </a>
         </div>
 
+        <!-- جروب جديد لملفات الغازات -->
+        <div class="download-group">
+          <h3>بيانات الغازات (Excel)</h3>
+          <a
+            href="data/marg_gas.xlsx"
+            download
+            class="btn-download"
+          >
+            تحميل غازات المرج
+          </a>
+          <a
+            href="data/mostord_gas.xlsx"
+            download
+            class="btn-download"
+          >
+            تحميل غازات مسطرد
+          </a>
+        </div>
+
         <div class="download-group">
           <h3>المرئيات (اختياري)</h3>
-          <!-- لو حبيت تحط تحميل للـ GeoJSON أو SHP كمان -->
           <a
             href="data/marg_boundary.geojson"
             download
