@@ -131,10 +131,11 @@ function addFactoriesLayer(geojson, city) {
 
 // بناء محتوى البوب أب: يعرض الغازات + إجمالي الانبعاثات + نسبة المصنع من المنطقة
 function buildPopupHtml(props, percentOfCity, cityLabel) {
+  // اسم المصنع الحقيقي
   const name =
-    props.name ||
+    props.factory_name ||
     props["اسم المصنع"] ||
-    props["factory_name"] ||
+    props.name ||
     "مصنع بدون اسم";
 
   const ch4 = props.CH4 ?? props["CH4"];
@@ -146,15 +147,30 @@ function buildPopupHtml(props, percentOfCity, cityLabel) {
 
   const rows = [];
 
-  if (ch4 !== undefined) rows.push(`<tr><th>CH₄</th><td>${Number(ch4).toFixed(3)}</td></tr>`);
-  if (co !== undefined) rows.push(`<tr><th>CO</th><td>${Number(co).toFixed(6)}</td></tr>`);
-  if (no2 !== undefined) rows.push(`<tr><th>NO₂</th><td>${Number(no2).toFixed(6)}</td></tr>`);
-  if (o3 !== undefined) rows.push(`<tr><th>O₃</th><td>${Number(o3).toFixed(6)}</td></tr>`);
-  if (so2 !== undefined) rows.push(`<tr><th>SO₂</th><td>${Number(so2).toFixed(6)}</td></tr>`);
+  if (ch4 !== undefined)
+    rows.push(
+      `<tr><th>CH₄</th><td>${Number(ch4).toFixed(3)}</td></tr>`
+    );
+  if (co !== undefined)
+    rows.push(
+      `<tr><th>CO</th><td>${Number(co).toFixed(6)}</td></tr>`
+    );
+  if (no2 !== undefined)
+    rows.push(
+      `<tr><th>NO₂</th><td>${Number(no2).toFixed(6)}</td></tr>`
+    );
+  if (o3 !== undefined)
+    rows.push(
+      `<tr><th>O₃</th><td>${Number(o3).toFixed(6)}</td></tr>`
+    );
+  if (so2 !== undefined)
+    rows.push(
+      `<tr><th>SO₂</th><td>${Number(so2).toFixed(6)}</td></tr>`
+    );
 
   if (total !== null) {
     rows.push(
-      `<tr><th>إجمالي الانبعاثات</th><td>${Number(total).toFixed(3)}</td></tr>`
+      `<tr><th>إجمالي الانبعاثات</th><td>${Number(total).toFixed(2)}</td></tr>`
     );
   }
 
