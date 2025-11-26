@@ -216,3 +216,34 @@ body {
     height: 50vh;
   }
 }
+
+
+/* Popup styling */
+.popup h3 {
+  margin: 0 0 4px;
+  font-size: 0.95rem;
+}
+
+.popup-city {
+  margin: 0 0 6px;
+  font-size: 0.8rem;
+  color: #9ca3af;
+}
+
+.popup-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.popup-table th {
+  text-align: right;
+  padding: 2px 4px;
+  color: #9ca3af;
+  white-space: nowrap;
+}
+
+.popup-table td {
+  text-align: left;
+  padding: 2px 4px;
+}
