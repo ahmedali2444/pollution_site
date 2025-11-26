@@ -21,7 +21,7 @@ const layers = {
   mostordFactories: null,
 };
 
-// نجيب البيانات من ملفات GeoJSON
+// تحميل كل بيانات الخريطة
 async function loadData() {
   try {
     const [
@@ -46,7 +46,7 @@ async function loadData() {
     fitMapToData();
   } catch (err) {
     console.error("Error loading data:", err);
-    alert("حدث خطأ أثناء تحميل البيانات. تأكد من مسارات الملفات.");
+    alert("حدث خطأ أثناء تحميل البيانات. تأكد من مسارات ملفات GeoJSON.");
   }
 }
 
@@ -73,26 +73,9 @@ function addCityBoundary(geojson, city) {
   else layers.mostordBoundary = layer;
 }
 
-// تحديد حقل التأثير (الإجمالي) من خصائص البيانات
-function detectImpactField(geojson) {
-  if (!geojson.features.length) return null;
-  const props = geojson.features[0].properties || {};
-  if ("total_emissions" in props) return "total_emissions";
-  if ("emissions" in props) return "emissions";
-  if ("impact" in props) return "impact";
-  if ("تأثير" in props) return "تأثير";
-  return null;
-}
-
-// إضافة طبقة المصانع
+// إضافة طبقة المصانع (نستخدم الاسم الحقيقي + الغازات + النسبة الجاهزة)
 function addFactoriesLayer(geojson, city) {
-  const impactField = detectImpactField(geojson);
   const cityLabel = city === "marg" ? "المرج" : "مسطرد";
-
-  const totalImpact = geojson.features.reduce((sum, f) => {
-    const val = Number(f.properties?.[impactField] ?? 0);
-    return sum + (isNaN(val) ? 0 : val);
-  }, 0);
 
   const markerOptions =
     city === "marg"
@@ -108,18 +91,70 @@ function addFactoriesLayer(geojson, city) {
       });
     },
     onEachFeature: (feature, layer) => {
-      const props = feature.properties || {};
+      const p = feature.properties || {};
 
-      const rawImpact = Number(props[impactField] ?? 0);
-      const percentOfCity =
-        totalImpact > 0 && !isNaN(rawImpact)
-          ? ((rawImpact / totalImpact) * 100).toFixed(2)
-          : null;
+      const factoryName =
+        p.factory_name ||
+        p["اسم المصنع"] ||
+        p.name ||
+        "مصنع بدون اسم";
 
-      const popupHtml = buildPopupHtml(props, percentOfCity, cityLabel);
+      // نسبة التلوث مكتوبة في الـ GeoJSON أصلاً مع علامة %
+      const impactPercent = (p.impact_percent || "0%").toString();
+
+      const ch4 = p.CH4 ?? p["CH4"];
+      const co = p.CO ?? p["CO"];
+      const no2 = p.NO2 ?? p["NO2"];
+      const o3 = p.O3 ?? p["O3"];
+      const so2 = p.SO2 ?? p["SO2"];
+
+      const total = Number(p.total_emissions || 0);
+      const totalRounded = total.toFixed(2); // رقمين بعد العلامة
+
+      const rows = [];
+
+      rows.push(
+        `<tr><th>نسبة التلوث داخل ${cityLabel}</th><td>${impactPercent}</td></tr>`
+      );
+
+      if (ch4 !== undefined)
+        rows.push(
+          `<tr><th>CH₄</th><td>${Number(ch4).toFixed(3)}</td></tr>`
+        );
+      if (co !== undefined)
+        rows.push(
+          `<tr><th>CO</th><td>${Number(co).toFixed(6)}</td></tr>`
+        );
+      if (no2 !== undefined)
+        rows.push(
+          `<tr><th>NO₂</th><td>${Number(no2).toFixed(6)}</td></tr>`
+        );
+      if (o3 !== undefined)
+        rows.push(
+          `<tr><th>O₃</th><td>${Number(o3).toFixed(6)}</td></tr>`
+        );
+      if (so2 !== undefined)
+        rows.push(
+          `<tr><th>SO₂</th><td>${Number(so2).toFixed(6)}</td></tr>`
+        );
+
+      rows.push(
+        `<tr><th>إجمالي الانبعاثات</th><td>${totalRounded}</td></tr>`
+      );
+
+      const popupHtml = `
+        <div class="popup">
+          <h3>${factoryName}</h3>
+          <p class="popup-city">المنطقة: ${cityLabel}</p>
+          <table class="popup-table">
+            <tbody>
+              ${rows.join("")}
+            </tbody>
+          </table>
+        </div>
+      `;
+
       layer.bindPopup(popupHtml);
-
-      // فتح البوب أب عند hover
       layer.on("mouseover", () => layer.openPopup());
       layer.on("mouseout", () => layer.closePopup());
     },
@@ -129,83 +164,18 @@ function addFactoriesLayer(geojson, city) {
   else layers.mostordFactories = layer;
 }
 
-// بناء محتوى البوب أب: يعرض الغازات + إجمالي الانبعاثات + نسبة المصنع من المنطقة
-function buildPopupHtml(props, percentOfCity, cityLabel) {
-  // اسم المصنع الحقيقي
-  const name =
-    props.factory_name ||
-    props["اسم المصنع"] ||
-    props.name ||
-    "مصنع بدون اسم";
-
-  const ch4 = props.CH4 ?? props["CH4"];
-  const co = props.CO ?? props["CO"];
-  const no2 = props.NO2 ?? props["NO2"];
-  const o3 = props.O3 ?? props["O3"];
-  const so2 = props.SO2 ?? props["SO2"];
-  const total = props.total_emissions ?? props.emissions ?? null;
-
-  const rows = [];
-
-  if (ch4 !== undefined)
-    rows.push(
-      `<tr><th>CH₄</th><td>${Number(ch4).toFixed(3)}</td></tr>`
-    );
-  if (co !== undefined)
-    rows.push(
-      `<tr><th>CO</th><td>${Number(co).toFixed(6)}</td></tr>`
-    );
-  if (no2 !== undefined)
-    rows.push(
-      `<tr><th>NO₂</th><td>${Number(no2).toFixed(6)}</td></tr>`
-    );
-  if (o3 !== undefined)
-    rows.push(
-      `<tr><th>O₃</th><td>${Number(o3).toFixed(6)}</td></tr>`
-    );
-  if (so2 !== undefined)
-    rows.push(
-      `<tr><th>SO₂</th><td>${Number(so2).toFixed(6)}</td></tr>`
-    );
-
-  if (total !== null) {
-    rows.push(
-      `<tr><th>إجمالي الانبعاثات</th><td>${Number(total).toFixed(2)}</td></tr>`
-    );
-  }
-
-  if (percentOfCity !== null) {
-    rows.push(
-      `<tr><th>نسبة التلوث داخل ${cityLabel}</th><td>${percentOfCity}%</td></tr>`
-    );
-  }
-
-  return `
-    <div class="popup">
-      <h3>${name}</h3>
-      <p class="popup-city">المنطقة: ${cityLabel}</p>
-      <table class="popup-table">
-        <tbody>
-          ${rows.join("")}
-        </tbody>
-      </table>
-    </div>
-  `;
-}
-
 // تحديث الأرقام في البانل (عدد المصانع + إجمالي الانبعاثات)
 function updateSummaryStats(margFactories, mostordFactories) {
   const allFeatures = [
     ...margFactories.features,
     ...mostordFactories.features,
   ];
+
   const totalFactories = allFeatures.length;
 
-  const impactField =
-    detectImpactField(margFactories) || detectImpactField(mostordFactories);
-
-  const totalImpact = allFeatures.reduce((sum, f) => {
-    const val = Number(f.properties?.[impactField] ?? 0);
+  const totalEmissions = allFeatures.reduce((sum, f) => {
+    const p = f.properties || {};
+    const val = Number(p.total_emissions || 0);
     return sum + (isNaN(val) ? 0 : val);
   }, 0);
 
@@ -215,7 +185,7 @@ function updateSummaryStats(margFactories, mostordFactories) {
   if (totalFactoriesEl) totalFactoriesEl.textContent = totalFactories;
   if (totalEmissionsEl)
     totalEmissionsEl.textContent =
-      totalImpact > 0 ? totalImpact.toFixed(2) : "–";
+      totalEmissions > 0 ? totalEmissions.toFixed(2) : "–";
 }
 
 // ظبط مدى الخريطة على كل الطبقات
